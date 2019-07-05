@@ -7,11 +7,11 @@ import com.mybank.models.Bank;
 public interface Dao {
 	Dao current = new BankDaoInMemory();
 	
-	Bank makeDeposit(Bank bank, double amount);
+	Bank makeDeposit(int choice, double amount);
 	
-	Bank withdrawBalance(Bank bank, double amount);
+	Bank withdrawBalance(int choice, double amount);
 	
-	double calculateInterest(double amount, double rate, int year);
+	double calculateInterest(double amount, double rate, int month);
 	
 	List<Bank> viewAccount();
 	

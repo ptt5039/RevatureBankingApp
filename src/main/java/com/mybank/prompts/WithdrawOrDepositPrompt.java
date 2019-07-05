@@ -3,22 +3,23 @@ package com.mybank.prompts;
 import java.util.List;
 import java.util.Scanner;
 
-import com.mybank.daos.BankDaoInMemory;
 import com.mybank.daos.Dao;
 import com.mybank.models.Bank;
 
 public class WithdrawOrDepositPrompt implements Prompt {
-	
-	Dao d = new BankDaoInMemory();
-	List<Bank> banks;
-	Scanner sc = new Scanner(System.in);
+
+	private Dao d = Dao.current;
+	private List<Bank> banks;
+	private Bank bank;
+	private Scanner sc = new Scanner(System.in);
 
 	@Override
 	public Prompt run() {
 		String input;
 		banks = d.viewAccount();
-		System.out.println("Your account: " + banks.get(d.getCurrentChoice()).toString());
-		
+		bank = banks.get(d.getCurrentChoice());
+		System.out.println("Your account: " + bank.toString());
+
 		System.out.println("Choose what do you want to do with your trash bin.");
 		System.out.println("1. Get the trash out");
 		System.out.println("2. Put trash in the bin");
@@ -28,24 +29,19 @@ public class WithdrawOrDepositPrompt implements Prompt {
 
 		switch (input) {
 		case "1":
-			System.out.println("How many pieces of trash you want to take out:");
-			input = sc.nextLine();
-			
-			break;
+			return new WithdrawPrompt();
 		case "2":
-			break;
+			return new DepositPrompt();
 		case "3":
-			break;
+			return new RemoveAccountPrompt();
 		default:
 			if (input.equalsIgnoreCase("q")) {
 				return new HomePrompt();
 			} else {
-				System.out.println("You made an invalid choice, please try again.");
-				return new WithdrawOrDepositPrompt().run();
+				System.out.println("Invalid input, please try again!");
+				return new WithdrawOrDepositPrompt();
 			}
-
 		}
-		return null;
 	}
 
 }
